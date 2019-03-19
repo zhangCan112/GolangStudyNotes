@@ -4,4 +4,4 @@
 [TOC]
 
 ## 工具和环境
-### [关于VS code 安装go 插件失败解决方案]()
+### [关于VS code 安装go 插件失败解决方案](https://github.com/zhangCan112/GolangStudyNotes/blob/master/NO1.md)

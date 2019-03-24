@@ -5,3 +5,5 @@
 
 ## 工具和环境
 ### [关于VS code 安装go 插件失败解决方案](https://github.com/zhangCan112/GolangStudyNotes/blob/master/NO1.md)
+
+### [GitHub上优秀的Go开源项目](https://studygolang.com/articles/10217)

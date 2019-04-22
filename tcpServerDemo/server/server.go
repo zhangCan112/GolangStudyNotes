@@ -33,6 +33,6 @@ func doServerStuff(conn net.Conn) {
 			fmt.Println("Error reading", err.Error())
 			return
 		}
-		fmt.Printf("Received data: %v", string(buf[:len]))
+		fmt.Printf("Received data: %v\n", string(buf[:len]))
 	}
 }

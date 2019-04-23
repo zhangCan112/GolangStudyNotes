@@ -68,6 +68,11 @@ func (n *Negroni) With(handlers ...Handler) *Negroni {
 	)
 }
 
+// Use 添加一个handler到中间件栈中
+func (n *Negroni) Use(handler Handler) {
+
+}
+
 // build 利用递归构建中间件链
 func build(handlers []Handler) middleware {
 	var next middleware

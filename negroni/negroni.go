@@ -1,6 +1,15 @@
 package negroni
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+	"os"
+)
+
+const (
+	// DefaultAddress 默认的服务地址
+	DefaultAddress = ":8080"
+)
 
 // Handler 中间件定义的hanlder接口，比http.Handler多了一个next参数
 type Handler interface {
@@ -41,7 +50,7 @@ func WrapFunc(handlerFunc http.HandlerFunc) Handler {
 }
 
 // Negroni 是一组中间件的处理程序， 可以作为http.handler调用
-// negroni中间件按添加到堆栈的顺序进行计算
+// negroni中间件按添加到队列的顺序进行计算
 type Negroni struct {
 	middleware middleware
 	handlers   []Handler
@@ -68,12 +77,52 @@ func (n *Negroni) With(handlers ...Handler) *Negroni {
 	)
 }
 
-// Use 添加一个handler到中间件栈中
+// Use 添加一个handler到中间件队列中
 func (n *Negroni) Use(handler Handler) {
-
+	if handler == nil {
+		panic("handler cannot be nil")
+	}
+	n.handlers = append(n.handlers, handler)
+	n.middleware = build(n.handlers)
 }
 
-// build 利用递归构建中间件链
+// UseFunc 将一个中间件函数添加到中间件栈中
+func (n *Negroni) UseFunc(handlerFunc func(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc)) {
+	n.Use(HandlerFunc(handlerFunc))
+}
+
+// UseHandler 将一个http.Handler加入中间件队列
+func (n *Negroni) UseHandler(handler http.Handler) {
+	n.Use(Wrap(handler))
+}
+
+// UseHandlerFunc 将一个http.HandlerFunc加入中间件队列
+func (n *Negroni) UseHandlerFunc(handlerFunc func(rw http.ResponseWriter, r *http.Request)) {
+	n.UseHandler(http.HandlerFunc(handlerFunc))
+}
+
+// Run 是Negroni的一个便利函数，他可以将Negroni当作一个Http Server来启动
+// addr 如果提供了则按照提供的地址创建服务
+// 如果没有提供addr，但是在环境参数中有port值，则会使用这个接口值
+// 否则会使用默认的8080接口启动服务
+func (n *Negroni) Run(addr ...string) {
+	l := log.New(os.Stdout, "[Negroni]", 0)
+	finnalAddr := detectAddress(addr...)
+	l.Printf("listen on %s", finnalAddr)
+	l.Fatal(http.ListenAndServe(finnalAddr, n))
+}
+
+func detectAddress(addr ...string) string {
+	if len(addr) > 0 {
+		return addr[0]
+	}
+	if port := os.Getenv("PORT"); port != "" {
+		return ":" + port
+	}
+	return DefaultAddress
+}
+
+// build 利用递归构建中间件
 func build(handlers []Handler) middleware {
 	var next middleware
 	switch {

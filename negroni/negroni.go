@@ -122,6 +122,11 @@ func detectAddress(addr ...string) string {
 	return DefaultAddress
 }
 
+// Handlers 返回当前中间件链中的所有hander
+func (n *Negroni) Handlers() []Handler {
+	return n.handlers
+}
+
 // build 利用递归构建中间件
 func build(handlers []Handler) middleware {
 	var next middleware

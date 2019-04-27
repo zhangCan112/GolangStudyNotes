@@ -178,3 +178,16 @@ func TestWrap(t *testing.T) {
 	expect(t, reponse.Code, http.StatusOK)
 
 }
+
+// 测试WrapFunc函数
+func TestWrapFunc(t *testing.T) {
+	response := httptest.NewRecorder()
+
+	handler := WrapFunc(func(rw http.ResponseWriter, r *http.Request) {
+		rw.WriteHeader(http.StatusOK)
+	})
+
+	handler.ServeHTTP(response, (*http.Request)(nil), voidHTTPHandlerFunc)
+
+	expect(t, response.Code, http.StatusOK)
+}

@@ -17,3 +17,35 @@ type ResponseWriter interface {
 	// 这对于必须在Response的写操作之前设置Header或者其他操作很有用
 	Before(fuc ResponseWriter)
 }
+
+func NewResponseWriter(rw http.ResponseWriter) ResponseWriter {
+	nrw := &responseWriter{
+		ResponseWriter: rw,
+	}
+
+	if _, ok := rw.(http.CloseNotifier); ok {
+		return &responseWriterCloseNotifer{nrw}
+	}
+
+	return nrw
+}
+
+type beforeFunc func(ResponseWriter)
+type responseWriter struct {
+	http.ResponseWriter
+	status      int
+	size        int
+	beforeFuncs []beforeFunc
+}
+
+func (rw *responseWriter) WriteHeader(s int) {
+	rw.status = s
+}
+
+type responseWriterCloseNotifer struct {
+	*responseWriter
+}
+
+func (rw *responseWriterCloseNotifer) closeNotify() <-chan bool {
+	return rw.ResponseWriter.(http.CloseNotifier).CloseNotify()
+}

@@ -103,6 +103,6 @@ type responseWriterCloseNotifer struct {
 	*responseWriter
 }
 
-func (rw *responseWriterCloseNotifer) closeNotify() <-chan bool {
+func (rw *responseWriterCloseNotifer) CloseNotify() <-chan bool {
 	return rw.ResponseWriter.(http.CloseNotifier).CloseNotify()
 }

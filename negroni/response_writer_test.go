@@ -63,6 +63,7 @@ func TestResponseWriterBeforeFuncHasAccessToStatus(t *testing.T) {
 	rw.Before(func(w ResponseWriter) {
 		status = w.Status()
 	})
+
 	rw.WriteHeader(http.StatusCreated)
 
 	expect(t, status, http.StatusCreated)

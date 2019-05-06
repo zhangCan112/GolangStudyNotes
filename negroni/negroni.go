@@ -57,7 +57,7 @@ type Negroni struct {
 }
 
 func (n *Negroni) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	n.middleware.ServeHTTP(rw, r)
+	n.middleware.ServeHTTP(NewResponseWriter(rw), r)
 }
 
 // New 返回一个预先没有配置中间件的新的Negroni实例

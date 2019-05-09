@@ -17,3 +17,18 @@
  1. 学习和熟悉如何使用golang标准库net包中自带的api创建一个简单的web服务
  2. 开始抄[urfave/negroni](https://github.com/urfave/negroni),这个库的主要功能就是扩展了http.Handler，为其添加了中间件能力。我们学习web服务很容易在掌握基本的web服务创建后就想到这个问题。这个库很顺滑的将你带入到抄写步骤中来
  3. 待续
+
+## MAC上设置永久添加环境变量
+Mac系统的环境变量，加载顺序为： 
+a. /etc/profile 
+b. /etc/paths 
+c. ~/.bash_profile 
+d. ~/.bash_login 
+e. ~/.profile 
+f. ~/.bashrc 
+其中a和b是系统级别的，系统启动就会加载，其余是用户接别的。c,d,e按照从前往后的顺序读取，如果c文件存在，则后面的几个文件就会被忽略不读了，以此类推。~/.bashrc没有上述规则，它是bash shell打开的时候载入的。这里建议在c中添加环境变量，以下也是以在c中添加环境变量来演示的。
+Go 一般需要设置的2个环境变量：
+//#用来设置工作区
+export GOPATH=/Users/xxxxusername/xxxpath/goxxx 
+//#用来使用go module
+export GO111MODULE=on

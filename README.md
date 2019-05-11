@@ -35,6 +35,9 @@ export GO111MODULE=on
 
 ## GoModule代理的设置，可以解决下载不了golang/x/xxx的问题
 go mod的代理比较出名的有微软的athens，可以基于它搭建一个私有的代理，管理内部的私有代码，而且微软提供了一个公共的代理，我们可以直接使用
+
 Linux export GOPROXY="https://athens.azurefd.net"
+
 Windows 设置GOPROXY环境变量
+
 这样google下的包可以顺利下载了,速度还挺快的。
